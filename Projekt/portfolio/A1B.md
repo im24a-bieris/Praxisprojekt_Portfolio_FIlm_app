@@ -3,13 +3,13 @@
 **Feature im Flask-Projekt:** Zusammenfassung der Filme (`/stats/total`)
 
 ## Kontext und Ziel
-Die App soll zeigen, wie viele Filme es gibt und wie gut sie im Schnitt sind, zum Beispiel "12 Filme, Durchschnitt 8.36".
+Die App soll anzeigen, wie viele Filme es gibt und was der Durchschnitt ist, z.B. "12 Filme, Durchschnitt 8.36".
 
 ## Konzept in eigenen Worten
-Eine Prozedur macht etwas, zum Beispiel etwas auf der Konsole ausgeben, und gibt nichts zurück. Eine pure function gibt nur ein Resultat zurück und ändert sonst nichts. Gleicher Input gibt immer gleichen Output. Darum kann man den Aufruf durch sein Resultat ersetzen. Das nennt man referentielle Transparenz.
+Eine Prozedur macht etwas, z.B. etwas in die Konsole schreiben, gibt aber nichts zurück. Eine pure function gibt nur etwas zurück und ändert sonst nichts. Wenn ich sie zweimal mit dem gleichen Input aufrufe, kommt zweimal das Gleiche raus. Deshalb könnte man den Aufruf auch durch das Resultat ersetzen, das nennt man referentielle Transparenz.
 
 ## Umsetzung im Projekt
-Ich habe dieselbe Aufgabe zweimal gebaut. `print_summary` gibt den Text mit `print` aus, das ist ein Seiteneffekt. `summary` gibt den Text zurück. In der Route kann ich nur `summary` brauchen, weil die Route einen Wert für das JSON braucht. In OO wäre das eine Methode, die mit den Daten im Objekt arbeitet.
+Ich habe die Zusammenfassung zweimal geschrieben. `print_summary` schreibt den Text mit `print` in die Konsole, das ist ein Seiteneffekt. `summary` gibt den Text nur zurück. Für die Route `/stats/total` geht nur `summary`, weil die Route den Text ins JSON packen muss. Bei OO wäre es eine Methode in einer Klasse, die auf die Daten vom Objekt zugreift.
 
 ## Code-Beispiel und Einordnung
 ```python
@@ -26,7 +26,7 @@ def summary(movies: Movies) -> str:
     """Gibt die Zusammenfassung als Text zurueck."""
     return f"{len(movies)} Filme, Durchschnitt {average_rating(movies):.2f}"
 ```
-Beide stehen in `movies.py` (Zeilen 40–51). Den Unterschied sieht man schon an `-> None` und `-> str`.
+Beide sind in `movies.py` (Zeilen 40–51). Man sieht den Unterschied schon an `-> None` und `-> str`.
 
 ## Pflicht-Artefakt
 Prozedur `print_summary` und pure function `summary` nebeneinander (oben).
@@ -36,4 +36,4 @@ Prozedur `print_summary` und pure function `summary` nebeneinander (oben).
 - Test 2 (Edge Case): `summary(())` -> "0 Filme, Durchschnitt 0.00" (-> grün)
 
 ## Reflexion und Transfer
-Die Prozedur war schwer zu testen, die pure function ganz einfach. Nächstes Mal schreibe ich zuerst pure functions.
+Die Prozedur zu testen war umständlich, ich musste die Ausgabe mit `capsys` abfangen. Die pure function konnte ich einfach mit `==` prüfen. Darum würde ich die Logik immer in pure functions schreiben.

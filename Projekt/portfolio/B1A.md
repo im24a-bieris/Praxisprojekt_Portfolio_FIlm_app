@@ -3,13 +3,13 @@
 **Feature im Flask-Projekt:** Top-Liste (`/movies/top?n=5`)
 
 ## Kontext und Ziel
-Die Route soll die n besten Filme zurückgeben. Ich habe die Funktion zuerst imperativ gebaut und danach deklarativ. Dann habe ich beide verglichen und mich entschieden.
+Die Route `/movies/top` gibt die n besten Filme zurück. Ich habe sie zuerst imperativ geschrieben, dann deklarativ, und danach beide verglichen.
 
 ## Konzept in eigenen Worten
-Imperativ heisst: Ich beschreibe jeden einzelnen Schritt. Ich suche in einer Schleife den besten Film, nehme ihn heraus und wiederhole das. Deklarativ heisst: Ich sage nur, was ich will, also "nach Bewertung sortiert, die ersten n". Python macht den Rest.
+Imperativ beschreibe ich jeden Schritt selbst: in einer Schleife den besten Film suchen, rausnehmen und das wiederholen. Deklarativ sage ich nur, was ich haben will, also nach Bewertung sortiert und davon die ersten n. Wie das genau passiert, macht Python.
 
 ## Umsetzung im Projekt
-Die imperative Variante `top_movies_imperative` hat zwei Schleifen, ein `if` und zwei Hilfslisten. Die deklarative Variante `top_movies` ist nur eine Zeile mit `sorted`. Die Route benutzt die deklarative. Beim Umbau habe ich einen Fehler gefunden: Mit einem negativen n schneidet `[:n]` Filme am Ende ab. Darum steht dort `max(n, 0)`.
+`top_movies_imperative` hat zwei Schleifen, ein `if` und zwei Hilfslisten. `top_movies` ist nur eine Zeile mit `sorted`. Die Route benutzt `top_movies`. Beim Testen kam heraus, dass `[:n]` bei einem negativen n Filme hinten abschneidet, statt nichts zurückzugeben. Deshalb steht dort `max(n, 0)`.
 
 ## Code-Beispiel und Einordnung
 ```python
@@ -33,13 +33,13 @@ def top_movies(movies: Movies, n: int) -> Movies:
     """Die n besten Filme, deklarativ."""
     return tuple(sorted(movies, key=lambda m: m.rating, reverse=True)[:max(n, 0)])
 ```
-Beide stehen in `movies.py` (Zeilen 148–166). Sie geben genau das gleiche Resultat, auch wenn zwei Filme die gleiche Bewertung haben.
+Beide sind in `movies.py` (Zeilen 148–166) und geben das gleiche Resultat, auch wenn zwei Filme gleich gut bewertet sind.
 
 ## Pflicht-Artefakt
 Beide Varianten nebeneinander (oben), mit Vor- und Nachteilen:
 
-- Imperativ: 12 Zeilen. Man sieht jeden Schritt, darum ist Debuggen einfach. Aber es hat viele Variablen und ist bei grossem n langsam.
-- Deklarativ: 1 Zeile. Sie liest sich wie die Aufgabe und ist schnell. Aber beim Debuggen sieht man die einzelnen Schritte nicht.
+- Imperativ: 12 Zeilen. Man sieht jeden Schritt, darum ist Debuggen einfach. Dafür gibt es viele Variablen und bei grossem n ist es langsam.
+- Deklarativ: 1 Zeile. Man versteht sofort, was gemacht wird, und es ist schnell. Beim Debuggen sieht man aber die einzelnen Schritte nicht.
 
 ## Test und Überprüfung
 Der gleiche Test läuft gegen beide Varianten:
@@ -47,7 +47,7 @@ Der gleiche Test läuft gegen beide Varianten:
 - Test 2 (Edge Cases): `n=0` -> `()`, `n=-1` -> `()`, `n=50` -> alle 12 (-> beide grün)
 
 ## Entscheidung
-Ich nehme die deklarative Variante. Sie ist kürzer, schneller und man versteht sofort, was sie macht. Die imperative ist nur besser, wenn man beim Debuggen jeden Schritt sehen will.
+Ich nehme die deklarative Version. Sie ist viel kürzer, schneller und man sieht sofort, was sie macht. Die imperative wäre nur besser, wenn ich beim Debuggen jeden Schritt anschauen will.
 
 ## Reflexion und Transfer
-Überrascht hat mich, dass auch die kurze Variante einen Fehler hatte (negatives n). Gelernt habe ich, dass man beim Umbau die gleichen Tests behalten muss. Nur so sieht man, ob noch alles gleich funktioniert. Nächstes Mal schreibe ich Tests für negative Werte gleich am Anfang.
+Was mich überrascht hat, ist, dass die kurze Variante einen eigenen Fehler hatte (negatives n). Gelernt habe ich, dass man beim Umbau dieselben Tests behalten muss, nur so sieht man, ob sich das Verhalten geändert hat. Für nächstes Mal nehme ich mit, dass die Tests für negative Werte am besten am Anfang geschrieben werden.

@@ -3,13 +3,13 @@
 **Feature im Flask-Projekt:** Score für die Rangliste (`final_score`)
 
 ## Kontext und Ziel
-Für die Rangliste bekommt jeder Film einen Score. Neuere Filme bekommen einen kleinen Bonus.
+Für die Rangliste bekommt jeder Film einen Score. Neuere Filme bekommen ein bisschen Bonus.
 
 ## Konzept in eigenen Worten
-Ein Algorithmus ist eine feste Reihenfolge von Schritten. Aus dem gleichen Input kommt immer der gleiche Output. Bei einem Beispieldurchlauf rechne ich die Schritte von Hand nach.
+Ein Algorithmus ist eine feste Abfolge von Schritten. Mit dem gleichen Input kommt immer das Gleiche raus. Beim Beispieldurchlauf rechne ich die Schritte von Hand nach und vergleiche mit dem Programm.
 
 ## Umsetzung im Projekt
-Schritt 1: Der Basis-Score ist die Bewertung. Schritt 2: Der Bonus ist 0.02 pro Jahr seit 1990. Er ist nie negativ, und Filme aus der Zukunft bekommen keinen. Schritt 3: Basis plus Bonus, gerundet.
+Zuerst nehme ich die Bewertung als Basis. Dann kommt der Bonus dazu: 0.02 pro Jahr seit 1990, nie negativ, und Filme aus der Zukunft bekommen gar keinen. Am Schluss werden beide zusammengezählt und gerundet.
 
 ## Code-Beispiel und Einordnung
 ```python
@@ -24,7 +24,7 @@ def final_score(movie: Movie, today_year: int) -> float:
     """Gesamt-Score = Basis-Score + Bonus, auf 3 Stellen gerundet."""
     return round(base_score(movie) + recency_bonus(movie, today_year), 3)
 ```
-Der Code steht in `movies.py` (Zeilen 175–184).
+Der Code ist in `movies.py` (Zeilen 175–184).
 
 ## Pflicht-Artefakt
 Beispiel mit Inception (2010, Bewertung 8.8), Jahr 2026:
@@ -38,4 +38,4 @@ Beispiel mit Inception (2010, Bewertung 8.8), Jahr 2026:
 - Test 2 (Edge Case): Film von 1980 oder 2030 -> Bonus 0.0 (-> grün)
 
 ## Reflexion und Transfer
-Mit Kommazahlen rechnet der Computer nicht immer genau. Darum runde ich. Die Rechnung von Hand als Test zu speichern, mache ich wieder so.
+Bei Kommazahlen rechnet der Computer nicht immer ganz genau, deshalb runde ich am Schluss. Es war praktisch, die Rechnung von Hand direkt als Test zu speichern.

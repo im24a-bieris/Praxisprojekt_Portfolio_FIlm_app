@@ -3,13 +3,13 @@
 **Feature im Flask-Projekt:** Empfehlungen (`/movies/recommend`)
 
 ## Kontext und Ziel
-Die App soll Filme empfehlen, die gut bewertet sind (ab 8.0) und nicht zu alt (ab 2000). Das Resultat ist eine Liste wie "Inception (2010)", der beste Film zuerst. Das ist ein anderes Feature als bei C2B und C2A.
+Die App soll Filme empfehlen, die gut bewertet (ab 8.0) und nicht zu alt (ab 2000) sind. Raus kommt eine Liste wie "Inception (2010)", der beste zuerst. Das ist ein anderes Feature als bei C2B und C2A.
 
 ## Konzept in eigenen Worten
-Ein Lambda ist eine kleine Funktion ohne Namen. Man schreibt sie direkt dort, wo man sie braucht. Verketten heisst: Das Resultat von einem Schritt geht direkt in den nächsten, wie bei einem Fliessband.
+Ein Lambda ist eine kleine Funktion ohne Namen, die man direkt dort hinschreibt, wo man sie braucht. Beim Verketten geht das Resultat von einem Schritt direkt in den nächsten Schritt.
 
 ## Umsetzung im Projekt
-Die Kette in `recommend` hat drei Schritte. `filter` behält nur gute und neue Filme. `sorted` ordnet nach Bewertung, die beste zuerst. `map` macht aus jedem Film den Text "Titel (Jahr)". Alle drei benutzen ein Lambda. Ich sortiere vor `map`, weil es nach `map` nur noch Texte gibt. Dann könnte man nicht mehr nach Bewertung sortieren.
+`recommend` hat drei Schritte. `filter` behält nur gute und neue Filme, `sorted` sortiert nach Bewertung und `map` macht aus jedem Film den Text "Titel (Jahr)". Alle drei brauchen ein Lambda. Ich sortiere vor dem `map`, weil danach nur noch Text da ist und man nicht mehr nach Bewertung sortieren kann.
 
 ## Code-Beispiel und Einordnung
 ```python
@@ -20,7 +20,7 @@ def recommend(movies: Movies, min_rating: float = 8.0, min_year: int = 2000) -> 
     ordered = sorted(good, key=lambda m: (-m.rating, m.title))
     return tuple(map(lambda m: f"{m.title} ({m.year})", ordered))
 ```
-Der Code steht in `movies.py` (Zeilen 193–198). Jeder Zwischenschritt hat einen Namen (`good`, `ordered`). So kann man die Kette gut lesen.
+Der Code ist in `movies.py` (Zeilen 193–198). Die Zwischenschritte haben Namen (`good`, `ordered`), damit man die Kette besser lesen kann.
 
 ## Pflicht-Artefakt
 Lambdas in `filter`, `sorted` und `map`, verkettet zu einem Ablauf (oben).
@@ -31,4 +31,4 @@ Lambdas in `filter`, `sorted` und `map`, verkettet zu einem Ablauf (oben).
 - Test 3 (Edge Case): Mindestbewertung 9.5 -> `()` (-> grün)
 
 ## Reflexion und Transfer
-Am Anfang stand alles in einer langen Zeile. Das war schwer zu lesen. Mit Zwischenvariablen ist es klarer. Ein Lambda ist hier gut, weil die Bedingungen kurz sind. Wenn ich eine Bedingung an mehreren Orten brauche, nehme ich lieber eine Funktion mit Namen.
+In einer einzigen Zeile wäre die Kette schwer zu lesen, darum habe ich Zwischenvariablen benutzt. Lambdas passen hier, weil die Bedingungen kurz sind und nur einmal gebraucht werden. Wenn ich die gleiche Bedingung an mehreren Orten brauche, ist eine normale Funktion mit Namen besser, wie `is_highlight` beim Refactoring.

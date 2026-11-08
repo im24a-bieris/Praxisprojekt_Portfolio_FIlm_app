@@ -3,13 +3,13 @@
 **Feature im Flask-Projekt:** Film hinzufügen (`POST /movies`)
 
 ## Kontext und Ziel
-Mit `POST /movies` kann man einen neuen Film hinzufügen. Die Frage war: Ändere ich die alte Filmliste, oder mache ich eine neue?
+Mit `POST /movies` kann man einen Film hinzufügen. Ich musste entscheiden, ob ich die bestehende Filmliste ändere oder eine neue mache.
 
 ## Konzept in eigenen Worten
-Mutation heisst: Man ändert etwas, das schon existiert, zum Beispiel eine Liste mit `append`. Alle, die diese Liste benutzen, sehen die Änderung plötzlich auch. Immutable heisst: Man ändert das Alte nie. Man macht stattdessen etwas Neues mit der Änderung.
+Bei Mutation wird etwas verändert, das schon existiert, z.B. eine Liste mit `append`. Das Problem ist, dass alle anderen Stellen, die die gleiche Liste benutzen, die Änderung auch sehen. Bei immutable ändert man das Alte nie, sondern macht eine neue Version.
 
 ## Umsetzung im Projekt
-Zuerst habe ich `add_movie_mutating` gebaut. Sie hängt den Film an die Liste an. Danach habe ich `add_movie` gebaut. Sie gibt ein neues Tuple zurück, das alte bleibt gleich. Die Route benutzt `add_movie` und speichert das neue Tuple in `app.config["MOVIES"]`. Das ist wichtig, weil `load_movies` einen Cache hat. Mit Mutation würde ich aus Versehen auch den Cache ändern. Bei einer doppelten Id gibt `add_movie` einen Fehler (`ValueError`).
+Zuerst habe ich `add_movie_mutating` geschrieben, die den Film einfach mit `append` anhängt. Danach kam `add_movie`, die ein neues Tuple zurückgibt. Die Route benutzt `add_movie` und speichert das neue Tuple in `app.config["MOVIES"]`. Das ist hier wichtig, weil `load_movies` gecacht ist und immer das gleiche Objekt zurückgibt. Wäre das eine Liste und ich würde sie mit `append` ändern, wäre der Cache auch verändert. Wenn eine Id schon existiert, gibt `add_movie` einen `ValueError`.
 
 ## Code-Beispiel und Einordnung
 ```python
@@ -26,7 +26,7 @@ def add_movie(movies: Movies, movie: Movie) -> Movies:
         raise ValueError(f"Id {movie.id} existiert schon")
     return movies + (movie,)
 ```
-Beide stehen in `movies.py` (Zeilen 123–134). Bei der ersten wird die Liste verändert. Bei der zweiten entsteht ein neues Tuple.
+Beide sind in `movies.py` (Zeilen 123–134). Bei der ersten wird die Liste selbst verändert. Bei der zweiten gibt es ein neues Tuple und das alte bleibt.
 
 ## Pflicht-Artefakt
 Mutation und immutable Variante nebeneinander (oben). Nach `add_movie_mutating` hat die Liste 13 Filme, das Original ist also verändert. Nach `add_movie` hat das Original weiter 12 Filme.
@@ -37,4 +37,4 @@ Mutation und immutable Variante nebeneinander (oben). Nach `add_movie_mutating` 
 - Test 3 (Edge Case): `add_movie` mit Id 1 -> `ValueError` (-> grün)
 
 ## Reflexion und Transfer
-Zuerst dachte ich, unveränderliche Daten sind zu kompliziert. Beim Cache habe ich gemerkt, dass Mutation gefährlich ist: Der Fehler würde erst beim nächsten Request auffallen. Es ist besser, neue Werte zurückzugeben, als alte zu überschreiben. Das kann ich auch in anderen Projekten brauchen, zum Beispiel bei einem Warenkorb.
+Zuerst dachte ich, unveränderliche Daten sind zu kompliziert. Beim Cache habe ich gemerkt, dass Datenänderungen nicht so optimal sind, weil so ein Fehler erst beim nächsten Request auffallen würde. Es ist besser, neue Werte zurückzugeben, als alte zu überschreiben. Das mache ich in Zukunft auch in anderen Projekten so.

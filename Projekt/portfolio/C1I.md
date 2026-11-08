@@ -3,13 +3,13 @@
 **Feature im Flask-Projekt:** Score für die Rangliste, aufgeteilt in kleine Funktionen
 
 ## Kontext und Ziel
-Der Score besteht aus zwei Teilen: der Bewertung und einem Bonus für neuere Filme. Ich wollte jeden Teil in eine eigene kleine Funktion packen.
+Der Score besteht aus der Bewertung und einem Bonus für neuere Filme. Jeder Teil soll eine eigene kleine Funktion sein.
 
 ## Konzept in eigenen Worten
-Zerlegen heisst: Ich teile eine grosse Aufgabe in kleine Funktionen auf. Jede Funktion macht genau eine Sache. Die Signatur zeigt, was hineingeht und was herauskommt. Kleine Funktionen kann man einzeln testen und später neu zusammensetzen.
+Beim Zerlegen teile ich eine grössere Aufgabe in kleine Funktionen auf, die jeweils nur eine Sache machen. An der Signatur sieht man, was reingeht und was rauskommt. Kleine Funktionen kann man einzeln testen und später anders zusammensetzen.
 
 ## Umsetzung im Projekt
-Ich habe drei Funktionen gebaut. `base_score` gibt die Bewertung zurück. `recency_bonus` rechnet den Bonus. `final_score` zählt beides zusammen und rundet. Das Jahr ist ein Parameter (`today_year`). Ich hole es nicht mit `datetime.now()`, sonst wären die Funktionen nicht pure und die Tests würden nächstes Jahr nicht mehr stimmen. Ich hätte alles in eine Zeile schreiben können. Dann könnte ich den Bonus aber nicht allein testen. `base_score` sieht unnötig aus, aber so kann ich die Basis später ändern, ohne den Rest anzufassen.
+`base_score` gibt die Bewertung zurück, `recency_bonus` rechnet den Bonus aus und `final_score` zählt beides zusammen und rundet. Das Jahr übergebe ich als Parameter `today_year`. Mit `datetime.now()` wäre die Funktion nicht mehr pure, und die Tests würden nächstes Jahr ein anderes Resultat geben. Man könnte alles in eine Zeile schreiben, aber dann kann ich den Bonus nicht mehr alleine testen. `base_score` macht im Moment fast nichts, aber so kann ich die Basis später ändern, ohne `final_score` anzufassen.
 
 ## Code-Beispiel und Einordnung
 ```python
@@ -29,7 +29,7 @@ def final_score(movie: Movie, today_year: int) -> float:
     """Gesamt-Score = Basis-Score + Bonus, auf 3 Stellen gerundet."""
     return round(base_score(movie) + recency_bonus(movie, today_year), 3)
 ```
-Der Code steht in `movies.py` (Zeilen 170–184). Jede Funktion hat Typen in der Signatur und macht nur eine Sache.
+Der Code ist in `movies.py` (Zeilen 170–184). Jede Funktion hat Typen in der Signatur.
 
 ## Pflicht-Artefakt
 Die Signaturen:
@@ -43,4 +43,4 @@ Die Signaturen:
 - Test 3 (Edge Case): Bewertung 0, Jahr 2020 -> Score 0.6 (-> grün)
 
 ## Reflexion und Transfer
-Schwierig war, die richtige Grösse für die Funktionen zu finden. Gelernt habe ich, dass ein Parameter wie `today_year` eine Funktion testbar macht. Nächstes Mal würde ich 1990 und 0.02 als Konstanten mit Namen speichern. So eine Aufteilung kann ich auch für Preise mit Rabatt brauchen.
+Am schwierigsten war zu entscheiden, wie klein die Funktionen sein sollen. Durch `today_year` als Parameter sind die Funktionen gut testbar. Die Zahlen 1990 und 0.02 würde ich nächstes Mal als Konstanten mit Namen speichern.

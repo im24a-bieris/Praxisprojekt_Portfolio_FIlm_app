@@ -3,13 +3,13 @@
 **Feature im Flask-Projekt:** Statistik pro Genre (`/stats/genres`)
 
 ## Kontext und Ziel
-Die App soll pro Genre zeigen, wie viele Filme es gibt und wie gut sie im Schnitt sind. Das beste Genre kommt zuerst. Bei Gleichstand entscheidet der Name. Das ist das dritte Feature für C2, anders als C2B und C2I.
+Die App soll pro Genre zeigen, wie viele Filme es gibt und wie gut sie im Schnitt sind. Das beste Genre kommt zuerst, bei Gleichstand wird nach Name sortiert. Das ist das dritte Feature für C2, also anders als bei C2B und C2I.
 
 ## Konzept in eigenen Worten
-Aggregation heisst: Ich fasse viele Werte zu wenigen zusammen. Hier werden zwölf Filme zu vier Genres. Bei einer eigenen Sortierung gebe ich `sorted` mit `key=` eine Regel mit. Wenn die Regel zwei Werte hat, wird zuerst nach dem ersten und dann nach dem zweiten sortiert.
+Aggregation bedeutet, dass ich viele Werte zu wenigen zusammenfasse, hier 12 Filme zu 4 Genres. Bei einer eigenen Sortierung gebe ich `sorted` mit `key=` eine Regel mit. Wenn die Regel zwei Werte zurückgibt, wird zuerst nach dem ersten und bei Gleichstand nach dem zweiten sortiert.
 
 ## Umsetzung im Projekt
-`genre_stats` geht mit `reduce` durch alle Filme. Für jeden Film zählt es beim passenden Genre die Anzahl und die Summe hoch. Am Schluss rechnet es den Durchschnitt. `ranked_genre_stats` sortiert dann nach Durchschnitt (höchster zuerst) und bei Gleichstand nach Name.
+`genre_stats` geht mit `reduce` durch alle Filme und zählt beim passenden Genre die Anzahl und die Summe hoch. Am Ende wird der Durchschnitt ausgerechnet. `ranked_genre_stats` sortiert das dann nach Durchschnitt, der höchste zuerst, und bei Gleichstand nach Name.
 
 ## Code-Beispiel und Einordnung
 ```python
@@ -31,16 +31,17 @@ def ranked_genre_stats(movies: Movies) -> tuple[dict, ...]:
     rows = ({"genre": g, **values} for g, values in stats.items())
     return tuple(sorted(rows, key=lambda row: (-row["average"], row["genre"])))
 ```
-Der Code steht in `movies.py` (Zeilen 201–217). Oben sieht man die Aggregation mit `reduce`, unten die Sortierung mit zwei Regeln.
+Der Code ist in `movies.py` (Zeilen 201–217). Oben ist die Aggregation mit `reduce`, unten die Sortierung mit zwei Regeln.
 
 ## Pflicht-Artefakt
 Aggregation (`genre_stats`) und eigene Sortierung (`ranked_genre_stats`), oben.
 
 ## Vergleich mit anderen Lösungen
-- `reduce` (gewählt): verändert nichts und passt zum Rest von `movies.py`. Nachteil: Bei jedem Film wird das dict kopiert. Bei vielen Daten ist das langsamer.
-- `defaultdict`: kurz und schnell. Es ändert aber ein dict in einer Schleife (Mutation).
-- `groupby`: elegant, aber die Filme müssen vorher nach Genre sortiert sein. Sonst gibt es falsche Gruppen. Das vergisst man leicht.
-Ich nehme `reduce`, weil es nichts verändert und es bei zwölf Filmen keine Rolle spielt, dass es langsamer ist. Bei sehr vielen Filmen würde ich `defaultdict` nehmen.
+- `reduce` (gewählt): ändert nichts und passt zum Rest von `movies.py`. Der Nachteil ist, dass bei jedem Film das dict kopiert wird. Bei vielen Daten wird das langsam.
+- `defaultdict`: kurz und schnell, aber das dict wird in einer Schleife verändert (Mutation).
+- `groupby`: sieht gut aus, aber die Filme müssen vorher nach Genre sortiert sein, sonst kommen falsche Gruppen raus. Das vergisst man schnell.
+
+Ich habe `reduce` genommen, weil es nichts verändert und es bei 12 Filmen egal ist, dass es etwas langsamer ist. Mit sehr vielen Filmen würde ich `defaultdict` nehmen.
 
 ## Test und Überprüfung
 - Test 1: Sci-Fi -> 4 Filme, Durchschnitt 8.53 (-> grün)
@@ -49,4 +50,4 @@ Ich nehme `reduce`, weil es nichts verändert und es bei zwölf Filmen keine Rol
 - Test 4 (Edge Case leer): `genre_stats(())` -> `{}` (-> grün)
 
 ## Reflexion und Transfer
-Schwierig war, zu verstehen, was in `acc` gerade drin ist. Es war einfacher, Anzahl und Summe zu speichern statt direkt den Durchschnitt. Nächstes Mal würde ich das genauer aufschreiben. Gruppieren und sortieren kann ich auch für andere Auswertungen brauchen, zum Beispiel Noten pro Fach.
+Am Anfang war es schwierig zu verstehen, was gerade in `acc` drin ist. Anzahl und Summe zu speichern war einfacher als direkt den Durchschnitt, weil man mit einem Durchschnitt nicht gut weiterrechnen kann. Das Gruppieren könnte ich auch für andere Auswertungen brauchen, z.B. Noten pro Fach.

@@ -3,10 +3,10 @@
 **Feature im Flask-Projekt:** Datenteil `movies.py` (Filme laden, filtern, sortieren)
 
 ## Kontext und Ziel
-Alle Routen holen ihre Daten aus `movies.py`. Ich wollte, dass diese Datei nach Functional Design gebaut ist.
+Alle Routen holen die Daten aus `movies.py`. Diese Datei habe ich nach Functional Design aufgebaut.
 
 ## Konzept in eigenen Worten
-Immutable Datentypen kann man nach dem Erstellen nicht mehr ändern. Ein Constructor baut einen neuen Wert. Ein composable Operator bekommt Filme und gibt wieder Filme zurück. Darum kann man mehrere hintereinander hängen, wie Lego-Steine.
+Immutable Datentypen kann man nach dem Erstellen nicht mehr ändern. Ein Constructor erstellt einen neuen Wert. Ein composable Operator bekommt Filme und gibt wieder Filme zurück. Deshalb kann man mehrere davon hintereinander aufrufen.
 
 ## Umsetzung im Projekt
 - Immutable: `Movie` ist eine frozen dataclass (`movies.py`, Zeilen 7–14). Alle Funktionen geben Tuples zurück.
@@ -24,7 +24,7 @@ class Movie:
     year: int
     rating: float
 ```
-`frozen=True` macht den Film unveränderlich. Weil alle Operatoren ein Tuple bekommen und zurückgeben, geht zum Beispiel `top_movies(filter_by_genre(load_movies(), "Action"), 3)`.
+`frozen=True` sorgt dafür, dass man einen Film nicht mehr ändern kann. Weil alle Operatoren ein Tuple bekommen und eins zurückgeben, kann ich sie verschachteln, z.B. `top_movies(filter_by_genre(load_movies(), "Action"), 3)`.
 
 ## Pflicht-Artefakt
 Liste aller Elemente mit Fundort: `docs/functional_design.md`.
@@ -34,4 +34,4 @@ Liste aller Elemente mit Fundort: `docs/functional_design.md`.
 - Test 2 (Edge Case): `MOVIES[0].rating = 1.0` -> Fehler, weil frozen (-> grün)
 
 ## Reflexion und Transfer
-Am Anfang gaben meine Funktionen mal Listen, mal Tuples zurück. Erst als alle Tuples zurückgaben, konnte ich sie gut verbinden.
+Am Anfang gaben meine Funktionen mal Listen, mal Tuples zurück. Erst als alle Tuples zurückgaben, liessen sie sich besser zusammenführen. Das Prinzip "gleicher Typ rein und raus" nehme ich mit.

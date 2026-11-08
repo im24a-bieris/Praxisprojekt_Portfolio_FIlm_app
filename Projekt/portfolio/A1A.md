@@ -3,15 +3,15 @@
 **Feature im Flask-Projekt:** Durchschnittsbewertung pro Genre in drei Stilen (`variants.py`)
 
 ## Kontext und Ziel
-Ich wollte für jedes Genre den Durchschnitt der Bewertungen berechnen. Das Resultat ist zum Beispiel `{"Action": 8.3, "Drama": 8.37, "Sci-Fi": 8.53}`. Ich habe die gleiche Aufgabe dreimal gelöst, um die Stile zu vergleichen.
+Ich wollte für jedes Genre den Durchschnitt der Bewertungen ausrechnen, damit man einen besseren Überblick hat. Bei Sci-Fi kommt zum Beispiel 8.53 heraus. Die gleiche Aufgabe habe ich dreimal programmiert: prozedural, objektorientiert (OO) und funktional.
 
 ## Konzept in eigenen Worten
 - Prozedural: Ich sage dem Computer Schritt für Schritt, was er tun soll, mit Schleifen und Hilfsvariablen.
-- Objektorientiert (OO): Daten und Funktionen sind zusammen in einem Objekt. Das Objekt hat einen Zustand, der sich ändert.
-- Funktional: Ich verbinde Funktionen, die nichts verändern, sondern immer etwas Neues zurückgeben.
+- OO: Daten und Verhalten sind zusammen in einem Objekt, das einen Zustand hat und sich mit Methoden verändert.
+- Funktional: Ich beschreibe das Resultat mit Funktionen, die nichts verändern.
 
 ## Umsetzung im Projekt
-Prozedural benutze ich zwei dicts (`totals`, `counts`) und eine Schleife. In OO sammelt die Klasse `MovieStats` die Bewertungen, `add` ändert den Zustand und `averages` rechnet. Funktional baue ich mit `reduce` für jeden Film ein neues dict, ohne etwas zu verändern.
+In der prozeduralen Version habe ich zwei dicts, eines für die Summe und eines für die Anzahl. In der OO-Version gibt es die Klasse `MovieStats`. Mit `add` kommt ein Film dazu und `averages` rechnet am Ende den Durchschnitt aus. In der funktionalen Version benutze ich `reduce`. Dort wird für jeden Film ein neues dict gemacht und das alte bleibt gleich.
 
 ## Code-Beispiel und Einordnung
 ```python
@@ -41,21 +41,21 @@ def average_per_genre_functional(movies):
     grouped = reduce(step, movies, {})
     return {genre: round(total / count, 2) for genre, (count, total) in sorted(grouped.items())}
 ```
-Beide stehen in `variants.py` (Zeilen 5–19 und 47–54), die Klasse `MovieStats` in Zeilen 23–44. Alle drei geben genau das gleiche Resultat, darum ist der Vergleich fair.
+Beide sind in `variants.py` (Zeilen 5–19 und 47–54), die Klasse `MovieStats` ist in den Zeilen 23–44. Alle drei geben das gleiche Resultat, das prüft ein Test.
 
 ## Pflicht-Artefakt
 Die gleiche Aufgabe in drei Stilen, mit Bewertung:
 
-- Prozedural: 13 Zeilen, sehr einfach zu lesen und gut testbar. Aber die zwei dicts müssen immer zusammenpassen.
-- OO: 13 Zeilen, der Name der Klasse hilft beim Lesen. Aber der Zustand kann sich ändern, das macht das Testen schwerer.
-- Funktional: 6 Zeilen, sehr gut testbar und ohne Mutation. Aber man muss `reduce` kennen.
+- Prozedural: 13 Zeilen. Gut zu lesen und zu testen. Man muss aber aufpassen, dass die zwei dicts immer zusammenpassen.
+- OO: 13 Zeilen. Der Name der Klasse sagt gut, was passiert. Weil das Objekt einen Zustand hat, ist das Testen etwas mühsamer.
+- Funktional: 6 Zeilen. Keine Mutation und am einfachsten zu testen. Man muss aber wissen, wie `reduce` funktioniert.
 
 ## Test und Überprüfung
 - Test 1: alle drei mit `load_movies()` -> gleiches dict, z.B. Sci-Fi 8.53 (-> grün)
 - Test 2 (Edge Case): alle drei mit leerem Tuple -> `{}` (-> grün)
 
 ## Bewertung und Entscheidung
-Ich nehme die funktionale Variante. Sie ist am kürzesten, verändert nichts und ist leicht zu testen. Sie passt auch zum Rest von `movies.py`. Die prozedurale Variante ist am einfachsten zu lesen und bei sehr vielen Filmen schneller, weil die funktionale das dict bei jedem Film kopiert. OO lohnt sich erst, wenn man einen Zustand über längere Zeit braucht.
+Ich nehme die funktionale Version. Sie ist am kürzesten, ändert nichts und passt zum restlichen Code in `movies.py`. Bei sehr vielen Filmen würde ich aber die prozedurale nehmen. Die funktionale kopiert bei jedem Film das dict und wird dadurch langsamer. OO würde ich nur nehmen, wenn die Statistik länger bestehen und immer wieder neue Filme bekommen soll.
 
 ## Reflexion und Transfer
-Schwierig war, dass alle drei genau gleich runden und sortieren. Gelernt habe ich, dass der beste Stil von der Aufgabe und der Datenmenge abhängt. Nächstes Mal würde ich die Geschwindigkeit auch messen. Die Tabelle mit Kriterien kann ich bei anderen Entscheidungen wieder brauchen.
+Am meisten Zeit hat gebraucht, dass alle drei genau gleich runden und sortieren, sonst wäre der Test rot. Ich habe gemerkt, dass es nicht einfach einen besten Stil gibt, es kommt auf die Aufgabe an. Beim nächsten Mal würde ich auch messen, wie schnell die drei sind.

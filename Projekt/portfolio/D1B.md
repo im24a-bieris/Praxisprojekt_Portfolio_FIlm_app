@@ -3,17 +3,17 @@
 **Feature im Flask-Projekt:** Highlights (`/movies/highlights`), `load_movies` und `best_rating`
 
 ## Kontext und Ziel
-Die Funktion für die Highlights war zuerst unordentlich, mit zwei Schleifen und verschachtelten `if`. Ich habe sie aufgeräumt, ohne dass sich das Resultat ändert. Dazu habe ich zwei Stellen schneller gemacht.
+Die Funktion für die Highlights war zuerst unübersichtlich, mit zwei Schleifen und verschachtelten `if`. Ich habe sie aufgeräumt, ohne das Resultat zu ändern. Ausserdem habe ich zwei Sachen schneller gemacht.
 
 ## Konzept in eigenen Worten
-Refactoring heisst: Code besser lesbar machen, ohne dass sich das Resultat ändert. Die Tests müssen vorher und nachher grün sein.
+Beim Refactoring mache ich den Code besser lesbar, aber das Resultat bleibt gleich. Die Tests müssen vorher und nachher grün sein.
 
 ## Umsetzung im Projekt
-1. Extract Function: Die Bedingung und der Text sind jetzt eigene Funktionen (`is_highlight`, `highlight_label`). So sind sie einzeln testbar.
-2. Rename: `process` heisst jetzt `highlights`, `tmp` heisst `selected`. So sagt der Name, was die Funktion macht.
-3. Replace Loop with Pipeline: Die Schleifen sind durch `filter`, `sorted` und `map` ersetzt. Es braucht keine Hilfslisten mehr.
+1. Extract Function: Die Bedingung und der Text sind jetzt eigene Funktionen (`is_highlight`, `highlight_label`), damit man sie einzeln testen kann.
+2. Rename: `process` heisst jetzt `highlights` und `tmp` heisst `selected`. Jetzt sieht man am Namen, was passiert.
+3. Replace Loop with Pipeline: Statt Schleifen benutze ich `filter`, `sorted` und `map`, so braucht es keine Hilfslisten.
 
-Performance 1: `lru_cache` auf `load_movies`, die Filme werden nur einmal gebaut. Performance 2: Generator statt Liste in `best_rating`, so entsteht keine extra Liste im Speicher.
+Performance 1: `lru_cache` auf `load_movies`, damit die Filme nur einmal erstellt werden. Performance 2: In `best_rating` ein Generator statt einer Liste, so wird keine extra Liste im Speicher gemacht.
 
 ## Code-Beispiel und Einordnung
 ```python
@@ -21,7 +21,7 @@ def highlights(movies: Movies) -> tuple[str, ...]:
     """Highlights als Text, aelteste zuerst."""
     return tuple(map(highlight_label, sorted(filter(is_highlight, movies), key=year_of)))
 ```
-Das ist das Resultat der drei Techniken (`movies.py`, Zeilen 235–237).
+So sieht die Funktion nach den drei Schritten aus (`movies.py`, Zeilen 235–237).
 
 ## Pflicht-Artefakt
 Drei Techniken und zwei Performance-Massnahmen, je mit Zweck (oben).
@@ -31,4 +31,4 @@ Drei Techniken und zwei Performance-Massnahmen, je mit Zweck (oben).
 - Test 2: `load_movies() is load_movies()` -> True, der Cache funktioniert (-> grün)
 
 ## Reflexion und Transfer
-Mit Cache sind 10000 Aufrufe viel schneller (0.278 ms statt 43.677 ms).
+Mit dem Cache sind 10000 Aufrufe viel schneller (0.278 ms statt 43.677 ms). Das geht aber nur, weil die Filme unveränderlich sind.

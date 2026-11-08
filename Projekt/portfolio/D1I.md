@@ -3,13 +3,13 @@
 **Feature im Flask-Projekt:** Highlights (`/movies/highlights`)
 
 ## Kontext und Ziel
-Die Route zeigt gute Filme (ab 8.5, ab 1990) als Text wie "INCEPTION (Sci-Fi)", der älteste zuerst. Die erste Version `process` hat funktioniert, war aber schwer zu lesen. Ich habe sie in drei Schritten aufgeräumt. Jeder Schritt ist ein eigener Commit.
+Die Route zeigt gute Filme (ab 8.5 und ab 1990) als Text wie "INCEPTION (Sci-Fi)", der älteste zuerst. Die erste Version `process` hat funktioniert, war aber schwer zu lesen. Ich habe sie in drei Schritten umgebaut und jeden Schritt einzeln committet.
 
 ## Konzept in eigenen Worten
-Beim Refactoring ändere ich, wie der Code aussieht, aber nicht, was er macht. Das beweise ich mit einem Test. Er muss vor und nach dem Umbau grün sein. In Git sieht man dann genau, was sich geändert hat.
+Beim Refactoring ändere ich, wie der Code aussieht, aber nicht, was er macht. Um das zu zeigen, brauche ich einen Test, der vorher und nachher grün ist. In Git kann man dann genau sehen, was sich geändert hat.
 
 ## Umsetzung im Projekt
-Zuerst habe ich einen Test für die alte Funktion geschrieben. Dann habe ich in kleinen Schritten umgebaut: Funktionen herausziehen, bessere Namen geben, Schleifen ersetzen. Nach jedem Schritt habe ich `pytest` laufen lassen und committet. Wenn ein Test rot geworden wäre, hätte ich genau gewusst, welcher Schritt schuld ist.
+Der Test für die Highlights war schon im ersten Commit dabei. Danach habe ich Schritt für Schritt umgebaut: zuerst Funktionen rausgezogen, dann bessere Namen gegeben und am Schluss die Schleifen ersetzt. Nach jedem Schritt habe ich `pytest` laufen lassen und committet. Wäre ein Test rot gewesen, hätte ich gewusst, welcher Schritt das Problem ist.
 
 Commits:
 - Vorher (`process`): `47791a6`
@@ -41,7 +41,7 @@ def highlights(movies: Movies) -> tuple[str, ...]:
     """Highlights als Text, aelteste zuerst."""
     return tuple(map(highlight_label, sorted(filter(is_highlight, movies), key=year_of)))
 ```
-Die neue Funktion steht in `movies.py` (Zeilen 235–237). Die zwei `if` sind jetzt in `is_highlight`, der Text ist in `highlight_label`.
+Die neue Funktion ist in `movies.py` (Zeilen 235–237). Die zwei `if` sind jetzt in `is_highlight` und der Text in `highlight_label`.
 
 ## Pflicht-Artefakt
 Vorher und nachher aus Git (Hashes oben). Der gleiche Test ist in allen Commits grün.
@@ -51,4 +51,4 @@ Vorher und nachher aus Git (Hashes oben). Der gleiche Test ist in allen Commits 
 - Test 2 (Edge Case): leere Liste -> `()`, Film von 1985 -> `()` (-> grün in allen Commits)
 
 ## Reflexion und Transfer
-Am schwierigsten war, wirklich nur das Aussehen zu ändern und nicht aus Versehen auch das Resultat. Kleine Schritte haben dabei geholfen. So kann ich auch alten Code in anderen Projekten sicher aufräumen.
+Am schwierigsten war, nur das Aussehen zu ändern und nicht aus Versehen auch das Resultat. Durch die kleinen Schritte war das einfacher. So würde ich auch alten Code in anderen Projekten aufräumen.
