@@ -12,13 +12,15 @@ Beim Refactoring ändere ich, wie der Code aussieht, aber nicht, was er macht. D
 Zuerst habe ich einen Test für die alte Funktion geschrieben. Dann habe ich in kleinen Schritten umgebaut: Funktionen herausziehen, bessere Namen geben, Schleifen ersetzen. Nach jedem Schritt habe ich `pytest` laufen lassen und committet. Wenn ein Test rot geworden wäre, hätte ich genau gewusst, welcher Schritt schuld ist.
 
 Commits:
-- Vorher (`process`): `<hash eintragen>`
-- Extract Function: `<hash eintragen>`
-- Rename: `<hash eintragen>`
-- Nachher (Pipeline): `<hash eintragen>`
+- Vorher (`process`): `47791a6`
+- Extract Function: `ec4bb36`
+- Rename: `5a1bcef`
+- Nachher (Pipeline): `85c0c6d`
+
+Den ganzen Unterschied sieht man mit `git diff 47791a6 85c0c6d -- Projekt/movies.py`.
 
 ## Code-Beispiel und Einordnung
-Vorher (steht nur noch im ersten Commit):
+Vorher (Commit `47791a6`):
 ```python
 def process(movies):
     """Verarbeitet die Filme."""

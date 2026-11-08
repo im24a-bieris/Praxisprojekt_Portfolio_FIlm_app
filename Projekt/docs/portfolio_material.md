@@ -196,11 +196,11 @@ stats = {g: list(group) for g, group in groupby(by_genre, key=lambda m: m.genre)
 ### D1I  (I, Mindestzeichen: 1000, Ziel 1100)
 - Feature im Projekt: Highlights
 - Pflicht-Artefakt laut Moodle: Vorher/Nachher aus der Commit-Historie, gleiches Verhalten per Test belegt
-- Git: **Commit-Hashes fehlen noch. Du machst die Commits selbst** (Anleitung unten), dann Hashes hier eintragen:
-  - Stand 0 (vorher): `<hash>`
-  - Stand 1 Extract Function: `<hash>`
-  - Stand 2 Rename: `<hash>`
-  - Stand 3 Replace Loop with Pipeline: `<hash>` (= aktueller Code)
+- Git: Commit-Hashes (in Git-Historie):
+  - Stand 0 (vorher): `47791a6`
+  - Stand 1 Extract Function: `ec4bb36`
+  - Stand 2 Rename: `5a1bcef`
+  - Stand 3 Replace Loop with Pipeline: `85c0c6d` (= aktueller Code)
 - Test, der alle Stände besteht (geprüft, alle 4 Stände liefern dasselbe):
   - `highlights(MOVIES)` -> FORREST GUMP (Drama), THE MATRIX (Sci-Fi), GLADIATOR (Action), THE DARK KNIGHT (Action), INCEPTION (Sci-Fi), INTERSTELLAR (Sci-Fi)
   - leer -> `()`; Film von 1985 mit 9.5 -> `()`
