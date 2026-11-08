@@ -217,18 +217,31 @@ def ranked_genre_stats(movies: Movies) -> tuple[dict, ...]:
     return tuple(sorted(rows, key=lambda row: (-row["average"], row["genre"])))
 
 
-# D1I: unschoener Zwischenstand (wird refaktoriert)
+# D1I: Refactoring Schritt 1 (Extract Function)
+HIGHLIGHT_MIN_RATING = 8.5
+HIGHLIGHT_MIN_YEAR = 1990
+
+
+def is_highlight(movie: Movie) -> bool:
+    """Ein Highlight ist gut bewertet und nicht zu alt."""
+    return movie.rating >= HIGHLIGHT_MIN_RATING and movie.year >= HIGHLIGHT_MIN_YEAR
+
+
+def highlight_label(movie: Movie) -> str:
+    """Anzeigetext fuer ein Highlight, z.B. 'INCEPTION (Sci-Fi)'."""
+    return f"{movie.title.upper()} ({movie.genre})"
+
+
 def process(movies):
     """Verarbeitet die Filme."""
     tmp = []
     for m in movies:
-        if m.rating >= 8.5:
-            if m.year >= 1990:
-                tmp.append(m)
+        if is_highlight(m):
+            tmp.append(m)
     tmp.sort(key=lambda x: x.year)
     res = []
     for x in tmp:
-        res.append(x.title.upper() + " (" + x.genre + ")")
+        res.append(highlight_label(x))
     return tuple(res)
 
 
