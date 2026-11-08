@@ -217,7 +217,7 @@ def ranked_genre_stats(movies: Movies) -> tuple[dict, ...]:
     return tuple(sorted(rows, key=lambda row: (-row["average"], row["genre"])))
 
 
-# D1I: Refactoring Schritt 1 (Extract Function)
+# D1I: Refactoring Schritt 2 (Rename)
 HIGHLIGHT_MIN_RATING = 8.5
 HIGHLIGHT_MIN_YEAR = 1990
 
@@ -232,17 +232,17 @@ def highlight_label(movie: Movie) -> str:
     return f"{movie.title.upper()} ({movie.genre})"
 
 
-def process(movies):
-    """Verarbeitet die Filme."""
-    tmp = []
-    for m in movies:
-        if is_highlight(m):
-            tmp.append(m)
-    tmp.sort(key=lambda x: x.year)
-    res = []
-    for x in tmp:
-        res.append(highlight_label(x))
-    return tuple(res)
+def highlights(movies: Movies) -> tuple[str, ...]:
+    """Highlights als Text, aelteste zuerst."""
+    selected = []
+    for movie in movies:
+        if is_highlight(movie):
+            selected.append(movie)
+    selected.sort(key=lambda movie: movie.year)
+    labels = []
+    for movie in selected:
+        labels.append(highlight_label(movie))
+    return tuple(labels)
 
 
 # D1A: lineare Suche in der Liste (O(n))

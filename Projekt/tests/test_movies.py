@@ -3,7 +3,7 @@ import pytest
 
 from movies import (
     Movie, add_movie, add_movie_mutating, average_rating, base_score, best_rating, filter_by_genre,
-    filter_by_years, final_score, find_by_id, genre_stats, process, load_movies, movie_index,
+    filter_by_years, final_score, find_by_id, genre_stats, highlights, load_movies, movie_index,
     next_id, print_summary, rank_movies, ranked_genre_stats, rate_movie, rating_of, recency_bonus,
     recommend, search_title, sort_by, summary, titles, top_movies, top_movies_imperative, total_rating,
 )
@@ -217,15 +217,15 @@ def test_three_styles_empty():
 
 # D1I: Verhalten des refaktorierten Codes (derselbe Test lief schon gegen process)
 def test_highlights():
-    assert process(MOVIES) == (
+    assert highlights(MOVIES) == (
         "FORREST GUMP (Drama)", "THE MATRIX (Sci-Fi)", "GLADIATOR (Action)",
         "THE DARK KNIGHT (Action)", "INCEPTION (Sci-Fi)", "INTERSTELLAR (Sci-Fi)",
     )
 
 
 def test_highlights_edge_cases():
-    assert process(()) == ()
-    assert process((Movie(1, "Alt", "Drama", 1985, 9.5),)) == ()
+    assert highlights(()) == ()
+    assert highlights((Movie(1, "Alt", "Drama", 1985, 9.5),)) == ()
 
 
 # D1A

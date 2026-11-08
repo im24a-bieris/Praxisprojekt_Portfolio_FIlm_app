@@ -5,7 +5,7 @@ from flask import Flask, jsonify, request
 
 from movies import (
     SORT_KEYS, Movie, add_movie, average_rating, best_rating, filter_by_genre, filter_by_years,
-    process, load_movies, movie_index, next_id, rank_movies, ranked_genre_stats, recommend,
+    highlights, load_movies, movie_index, next_id, rank_movies, ranked_genre_stats, recommend,
     search_title, sort_by, summary, titles, top_movies, total_rating,
 )
 
@@ -120,7 +120,7 @@ def get_recommend():
 @app.route("/movies/highlights")
 def get_highlights():
     """Highlights (Ergebnis des Refactorings)."""
-    return jsonify(process(current_movies()))
+    return jsonify(highlights(current_movies()))
 
 
 
